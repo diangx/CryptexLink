@@ -26,7 +26,11 @@ app.get('/', (req, res) => {
 */
 app.get('/api/account', async (req, res) => {
     try {
-        const accountInfo = await getAccountInfo();
+        if (!req.query.key) {
+            return res.status(400).json({ error: "Missing keys" });
+        }
+
+        const accountInfo = await getAccountInfo(req.query.key);
         res.json(accountInfo);
     } catch (error) {
         console.error('Error fetching account info:', error.message);
@@ -133,4 +137,10 @@ app.post('/api/order', async (req, res) => {
 // 서버 시작
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+// 에러 핸들링
+app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err.message);
+    res.status(500).json({ error: "Internal Server Error" });
 });

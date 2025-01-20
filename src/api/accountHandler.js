@@ -3,13 +3,12 @@ const uuidv4 = require("uuid").v4;
 const sign = require('jsonwebtoken').sign;
 require('dotenv').config();
 
-// 환경 변수
-const access_key = process.env.UPBIT_OPEN_API_ACCESS_KEY;
-const secret_key = process.env.UPBIT_OPEN_API_SECRET_KEY;
-const server_url = process.env.UPBIT_OPEN_API_SERVER_URL;
-
 // 계좌 정보 가져오기 함수
-const getAccountInfo = async () => {
+const getAccountInfo = async (req) => {
+    const access_key = req.accessKey || process.env.UPBIT_OPEN_API_ACCESS_KEY;
+    const secret_key = req.secretKey || process.env.UPBIT_OPEN_API_SECRET_KEY;
+    const server_url = req.serverUrl || process.env.UPBIT_OPEN_API_SERVER_URL;
+
     const payload = {
         access_key: access_key,
         nonce: uuidv4(),
